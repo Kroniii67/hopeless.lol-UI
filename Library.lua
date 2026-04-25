@@ -1518,6 +1518,13 @@ do
             Parent = PickOuter;
         });
 
+        Library:Create('UIStroke', {
+            Color = Library.OutlineColor,
+            Thickness = 0.6,
+            ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+            Parent = PickOuter
+        });
+
         local PickInner = Library:Create('Frame', {
             BackgroundColor3 = Library.BackgroundColor;
             BorderColor3 = Library.OutlineColor;
@@ -1781,6 +1788,16 @@ do
                 KeybindsToggle:Display(State);
             end
 
+            -- Font Scaling Logic 🖤
+            DisplayLabel.Text = KeyPicker.Value;
+            DisplayLabel.TextSize = 14;
+            
+            local MaxWidth = PickInner.AbsoluteSize.X - 4;
+            while DisplayLabel.TextBounds.X > MaxWidth and DisplayLabel.TextSize > 6 do
+                DisplayLabel.TextSize = DisplayLabel.TextSize - 1;
+            end;
+        end
+
             local YSize = 0
             local XSize = 0
 
@@ -2026,6 +2043,13 @@ do
         Library:Create('UICorner', {
             CornerRadius = UDim.new(0, 4);
             Parent = DropdownOuter;
+        });
+
+        Library:Create('UIStroke', {
+            Color = Library.OutlineColor,
+            Thickness = 0.6,
+            ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+            Parent = DropdownOuter
         });
 
         Library:AddToRegistry(DropdownOuter, {
@@ -3689,7 +3713,7 @@ do
             local X = Library:MapValue(Slider.Value, Slider.Min, Slider.Max, 0, 1);
             Fill.Size = UDim2.new(X, 0, 1, 0);
 
-            HideBorderRight.Visible = not (X == 1 or X == 0);
+            -- Removed HideBorderRight vertical line for a cleaner look 🖤
         end;
 
         function Slider:OnChanged(Func)
@@ -5622,9 +5646,25 @@ function Library:CreateWindow(...)
             local Highlight = Library:Create('Frame', {
                 BackgroundColor3 = Library.AccentColor;
                 BorderSizePixel = 0;
+                Position = UDim2.new(0, 0, 0, 0);
                 Size = UDim2.new(1, 0, 0, 2);
                 ZIndex = 5;
                 Parent = BoxInner;
+            });
+
+            Library:Create('UICorner', {
+                CornerRadius = UDim.new(0, 8);
+                Parent = Highlight;
+            });
+
+            -- Extra box to cover bottom corners of the highlight 🖤
+            Library:Create('Frame', {
+                BackgroundColor3 = Library.AccentColor;
+                BorderSizePixel = 0;
+                Position = UDim2.new(0, 0, 0, 1);
+                Size = UDim2.new(1, 0, 0, 1);
+                ZIndex = 5;
+                Parent = Highlight;
             });
 
             Library:AddToRegistry(Highlight, {
