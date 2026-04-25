@@ -1796,7 +1796,6 @@ do
             while DisplayLabel.TextBounds.X > MaxWidth and DisplayLabel.TextSize > 6 do
                 DisplayLabel.TextSize = DisplayLabel.TextSize - 1;
             end;
-        end
 
             local YSize = 0
             local XSize = 0
