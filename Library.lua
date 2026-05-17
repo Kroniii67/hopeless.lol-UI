@@ -16,6 +16,15 @@ local GetHUI = gethui or (function() return CoreGui end);
 
 local IsBadDrawingLib = false;
 
+local function GenerateRandomName()
+    local length = math.random(12, 24)
+    local array = {}
+    for i = 1, length do
+        array[i] = string.char(math.random(97, 122))
+    end
+    return table.concat(array)
+end
+
 local function SafeParentUI(Instance: Instance, Parent: Instance | () -> Instance)
     if not pcall(function()
         local DestinationParent
@@ -32,13 +41,19 @@ local function SafeParentUI(Instance: Instance, Parent: Instance | () -> Instanc
 end
 
 local function ParentUI(UI: Instance, SkipHiddenUI: boolean?)
-    if SkipHiddenUI then
-        SafeParentUI(UI, CoreGui)
-        return
+    UI.Name = GenerateRandomName()
+    
+    local TargetParent
+    local hasGetHUI, hui = pcall(GetHUI)
+    
+    if hasGetHUI and hui and hui ~= CoreGui then
+        TargetParent = hui
+    else
+        TargetParent = LocalPlayer:WaitForChild("PlayerGui", 5) or CoreGui
     end
 
     pcall(ProtectGui, UI)
-    SafeParentUI(UI, GetHUI)
+    SafeParentUI(UI, TargetParent)
 end
 
 local ScreenGui = Instance.new('ScreenGui');
@@ -50,7 +65,7 @@ ParentUI(ScreenGui);
 local ModalScreenGui = Instance.new("ScreenGui");
 ModalScreenGui.DisplayOrder = 999;
 ModalScreenGui.ResetOnSpawn = false;
-ParentUI(ModalScreenGui, true);
+ParentUI(ModalScreenGui);
 
 local ModalElement = Instance.new("TextButton");
 ModalElement.BackgroundTransparency = 1
